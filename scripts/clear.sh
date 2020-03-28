@@ -10,9 +10,11 @@ rm -rf config.yaml
 rm -rf .pier
 
 rm -rf start_first_network.sh
+rm -rf teardown_first_network.sh
 rm -rf start_fabric_pier.sh
 rm -rf transfer.sh
 rm -rf get_data.sh
 rm -rf query.sh
 rm -rf download.sh
 rm -rf fabric-rule.wasm
+rm -rf init_chaincode.sh
