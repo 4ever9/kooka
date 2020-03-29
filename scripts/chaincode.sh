@@ -36,6 +36,10 @@ function printHelp() {
   echo "      - 'install' - install chaincode"
   echo "      - 'upgrade' - upgrade chaincode"
   echo "      - 'init' - init broker"
+  echo "      - 'get_balance <fabric_ip>' - get Alice balance from transfer chaincode"
+  echo "      - 'get_data <fabric_ip>' - get path value from data_swapper chaincode"
+  echo "      - 'interchain_transfer <fabric_ip> <target_appchain_id>' - interchain transfer"
+  echo "      - 'interchain_get <fabric_ip> <target_appchain_id>' - interchain get data"
   echo "  chaincode.sh -h (print this message)"
 }
 
