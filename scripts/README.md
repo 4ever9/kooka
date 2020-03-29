@@ -37,7 +37,7 @@ wget https://github.com/4ever9/kooka/raw/master/scripts/chaincode.sh
 Download script:
 
 ```bash
-wget https://github.com/4ever9/kooka/raw/master/scripts/chaincode.sh
+wget https://github.com/4ever9/kooka/raw/master/scripts/fabric_pir.sh
 ```
 
 ```bash
