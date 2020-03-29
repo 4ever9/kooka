@@ -2,9 +2,7 @@
 
 set -e
 
-VERSION=1.0
 CURRENT_PATH=$(pwd)
-FABRIC_SAMPLE_PATH=${CURRENT_PATH}/fabric-samples
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -37,6 +35,7 @@ function printHelp() {
   echo "    <mode> - one of 'up', 'down', 'restart'"
   echo "      - 'install' - install chaincode"
   echo "      - 'upgrade' - upgrade chaincode"
+  echo "      - 'init' - init broker"
   echo "  chaincode.sh -h (print this message)"
 }
 
@@ -179,6 +178,125 @@ function upgradeChaincode() {
     --user Admin --orgid org2 --payload --config ./config.yaml
 }
 
+function initBroker() {
+  prepare
+
+  FABRIC_IP=localhost
+  if [ $1 ]; then
+    FABRIC_IP=$1
+  fi
+
+  print_blue "===> Init broker chaincode at $FABRIC_IP"
+
+  cd "${CURRENT_PATH}"
+  export CONFIG_PATH=${CURRENT_PATH}
+  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+
+  fabric-cli chaincode invoke --cid mychannel --ccid=broker \
+    --args='{"Func":"initialize"}' \
+    --user Admin --orgid org2 --payload --config ./config.yaml
+}
+
+function getBalance() {
+  prepare
+
+  FABRIC_IP=localhost
+  if [ $1 ]; then
+    FABRIC_IP=$1
+  fi
+
+  print_blue "===> Query Alice balance at $FABRIC_IP"
+
+  cd "${CURRENT_PATH}"
+  export CONFIG_PATH=${CURRENT_PATH}
+  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+
+  fabric-cli chaincode invoke --ccid=transfer \
+    --args '{"Func":"getBalance","Args":["Alice"]}' \
+    --config ./config.yaml --payload \
+    --orgid=org2 --user=Admin --cid=mychannel
+}
+
+function getData() {
+  prepare
+
+  FABRIC_IP=localhost
+  if [ $1 ]; then
+    FABRIC_IP=$1
+  fi
+
+  print_blue "===> Query data at $FABRIC_IP"
+
+  cd "${CURRENT_PATH}"
+  export CONFIG_PATH=${CURRENT_PATH}
+  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+
+  fabric-cli chaincode invoke --ccid=transfer \
+    --args '{"Func":"get","Args":["path"]}' \
+    --config ./config.yaml --payload \
+    --orgid=org2 --user=Admin --cid=mychannel
+}
+
+function interchainTransfer() {
+  prepare
+
+  FABRIC_IP=localhost
+  if [ $1 ]; then
+    FABRIC_IP=$1
+  fi
+
+  if [ ! $2 ]; then
+    echo "Please input target appchain"
+    exit 1
+  fi
+
+  TARGET_APPCHAIN_ID=$2
+
+  print_blue "===> Invoke at $FABRIC_IP"
+
+  cd "${CURRENT_PATH}"
+  export CONFIG_PATH=${CURRENT_PATH}
+  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+
+  echo "===> Alice transfer token from one chain to another chain"
+  echo "===> Target appchain id: $TARGET_APPCHAIN_ID"
+
+  fabric-cli chaincode invoke --ccid transfer \
+    --args '{"Func":"transfer","Args":["'"${TARGET_APPCHAIN_ID}"'", "mychannel&transfer", "Alice","Alice","1"]}' \
+    --config ./config.yaml --payload \
+    --orgid=org2 --user=Admin --cid=mychannel
+}
+
+function interchainGet() {
+  prepare
+
+  FABRIC_IP=localhost
+  if [ $1 ]; then
+    FABRIC_IP=$1
+  fi
+
+  if [ ! $2 ]; then
+    echo "Please input target appchain"
+    exit 1
+  fi
+
+  TARGET_APPCHAIN_ID=$2
+
+  print_blue "===> Invoke at $FABRIC_IP"
+
+  cd "${CURRENT_PATH}"
+  export CONFIG_PATH=${CURRENT_PATH}
+  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+
+  echo "===> Get path value from other appchain"
+  echo "===> Target appchain id: $TARGET_APPCHAIN_ID"
+
+  fabric-cli chaincode invoke --ccid transfer \
+    --args '{"Func":"get","Args":["'"${TARGET_APPCHAIN_ID}"'", "mychannel&data_swapper", "path"]}' \
+    --config ./config.yaml --payload \
+    --orgid=org2 --user=Admin --cid=mychannel
+}
+
 MODE=$1
 
 if [ "$MODE" == "install" ]; then
@@ -187,6 +305,21 @@ if [ "$MODE" == "install" ]; then
 elif [ "$MODE" == "upgrade" ]; then
   shift
   upgradeChaincode $1 $2
+elif [ "$MODE" == "init" ]; then
+  shift
+  initBroker $1
+elif [ "$MODE" == "get_balance" ]; then
+  shift
+  getBalance $1
+elif [ "$MODE" == "get_data" ]; then
+  shift
+  getData $1
+elif [ "$MODE" == "interchain_transfer" ]; then
+  shift
+  interchainTransfer $1 $2
+elif [ "$MODE" == "interchain_get" ]; then
+  shift
+  interchainGet $1 $2
 else
   printHelp
   exit 1
