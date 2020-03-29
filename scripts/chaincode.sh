@@ -75,7 +75,7 @@ function installChaincode() {
 
   cd "${CURRENT_PATH}"
   export CONFIG_PATH=${CURRENT_PATH}
-  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+  export FABRIC_IP=${FABRIC_IP}
 
   print_blue "===> 1. Deploying broker, transfer and data_swapper chaincode"
   fabric-cli chaincode install --gopath ./contracts --ccp broker --ccid broker --config ./config.yaml --orgid org2 --user Admin --cid mychannel
@@ -129,7 +129,7 @@ function upgradeChaincode() {
 
   cd "${CURRENT_PATH}"
   export CONFIG_PATH=${CURRENT_PATH}
-  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+  export FABRIC_IP=${FABRIC_IP}
 
   print_blue "===> 1. Deploying broker, transfer and data_swapper chaincode"
   fabric-cli chaincode install --gopath ./contracts --ccp broker --ccid broker \
@@ -190,7 +190,7 @@ function initBroker() {
 
   cd "${CURRENT_PATH}"
   export CONFIG_PATH=${CURRENT_PATH}
-  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+  export FABRIC_IP=${FABRIC_IP}
 
   fabric-cli chaincode invoke --cid mychannel --ccid=broker \
     --args='{"Func":"initialize"}' \
@@ -209,7 +209,7 @@ function getBalance() {
 
   cd "${CURRENT_PATH}"
   export CONFIG_PATH=${CURRENT_PATH}
-  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+  export FABRIC_IP=${FABRIC_IP}
 
   fabric-cli chaincode invoke --ccid=transfer \
     --args '{"Func":"getBalance","Args":["Alice"]}' \
@@ -229,7 +229,7 @@ function getData() {
 
   cd "${CURRENT_PATH}"
   export CONFIG_PATH=${CURRENT_PATH}
-  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+  export FABRIC_IP=${FABRIC_IP}
 
   fabric-cli chaincode invoke --ccid=transfer \
     --args '{"Func":"get","Args":["path"]}' \
@@ -256,7 +256,7 @@ function interchainTransfer() {
 
   cd "${CURRENT_PATH}"
   export CONFIG_PATH=${CURRENT_PATH}
-  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+  export FABRIC_IP=${FABRIC_IP}
 
   echo "===> Alice transfer token from one chain to another chain"
   echo "===> Target appchain id: $TARGET_APPCHAIN_ID"
@@ -286,7 +286,7 @@ function interchainGet() {
 
   cd "${CURRENT_PATH}"
   export CONFIG_PATH=${CURRENT_PATH}
-  x_replace "s/localhost/${FABRIC_IP}/g" "${CURRENT_PATH}"/config.yaml
+  export FABRIC_IP=${FABRIC_IP}
 
   echo "===> Get path value from other appchain"
   echo "===> Target appchain id: $TARGET_APPCHAIN_ID"

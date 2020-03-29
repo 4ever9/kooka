@@ -110,7 +110,6 @@ function start() {
   x_replace "s/44555/${PPROF_PORT}/g" "${PIER_ROOT}"/pier.toml
   x_replace "s/localhost:60011/${BITXHUB_ADDR}/g" "${PIER_ROOT}"/pier.toml
   x_replace "s/localhost/${FABRIC_IP}/g" "${PIER_ROOT}"/fabric/fabric.toml
-  x_replace "s/localhost/${FABRIC_IP}/g" "${PIER_ROOT}"/fabric/config.yaml
 
   print_blue "===> bitxhub_addr: $BITXHUB_ADDR, fabric_ip: $FABRIC_IP, pprof: $PPROF_PORT"
 
@@ -127,6 +126,7 @@ function start() {
 
   print_blue "===> Start pier"
   export CONFIG_PATH=${PIER_ROOT}/fabric
+  export FABRIC_IP=${FABRIC_IP}
   pier --repo "${PIER_ROOT}" start
 }
 
@@ -152,6 +152,7 @@ function restart() {
   print_blue "===> bitxhub_addr: $BITXHUB_ADDR, fabric_ip: $FABRIC_IP, pprof: $PPROF_PORT"
 
   export CONFIG_PATH=${PIER_ROOT}/fabric
+  export FABRIC_IP=${FABRIC_IP}
   pier --repo "${PIER_ROOT}" start
 }
 
