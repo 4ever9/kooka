@@ -33,9 +33,9 @@ function printHelp() {
   print_blue "Usage:  "
   echo "  chaincode.sh <mode>"
   echo "    <mode> - one of 'up', 'down', 'restart'"
-  echo "      - 'install' - install chaincode"
-  echo "      - 'upgrade' - upgrade chaincode"
-  echo "      - 'init' - init broker"
+  echo "      - 'install <fabric_ip>' - install broker, transfer and data_swapper chaincode"
+  echo "      - 'upgrade <fabric_ip> <chaincode_version(default: v1)>' - upgrade broker, transfer and data_swapper chaincode"
+  echo "      - 'init <fabric_ip>' - init broker"
   echo "      - 'get_balance <fabric_ip>' - get Alice balance from transfer chaincode"
   echo "      - 'get_data <fabric_ip>' - get path value from data_swapper chaincode"
   echo "      - 'interchain_transfer <fabric_ip> <target_appchain_id>' - interchain transfer"
@@ -124,8 +124,8 @@ function upgradeChaincode() {
   fi
 
   CHAINCODE_VERSION=v1
-  if [ $1 ]; then
-    FABRIC_IP=$1
+  if [ $2 ]; then
+    CHAINCODE_VERSION=$2
   fi
 
   print_blue "Upgrade chaincode at $FABRIC_IP"

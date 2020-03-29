@@ -35,8 +35,8 @@ function printHelp() {
   print_blue "Usage:  "
   echo "  fabric_pier.sh <mode>"
   echo "    <mode> - one of 'start', 'restart'"
-  echo "      - 'start' - bring up the fabric pier"
-  echo "      - 'restart' - restart the fabric pier"
+  echo "      - 'start <bitxhub_addr> <fabric_ip> <pprof_port>' - bring up the fabric pier"
+  echo "      - 'restart <bitxhub_addr> <fabric_ip> <pprof_port>' - restart the fabric pier"
   echo "      - 'id' - print pier id"
   echo "  fabric_pier.sh -h (print this message)"
 }
